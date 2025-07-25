@@ -85,3 +85,5 @@ jobs:
           body: |
             Binary release for version ${{ github.event.inputs.version }}
             Built from SHA: ${{ github.event.inputs.sha_ref }}
+            
+            This is an unofficial pre-release build of SuperDB that can be installed for testing purposes. It is not intended for production use. See also the [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) which can install these pre-releases.
