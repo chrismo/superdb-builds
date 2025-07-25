@@ -75,4 +75,4 @@ jobs:
           files: |
             super-${{ github.event.inputs.version }}-linux-amd64/super-${{ github.event.inputs.version }}-linux-amd64
             super-${{ github.event.inputs.version }}-darwin-amd64/super-${{ github.event.inputs.version }}-darwin-amd64
-          generate_release_notes: true
+          generate_release_notes: false
