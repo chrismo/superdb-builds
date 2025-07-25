@@ -24,12 +24,19 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
+            arch: amd64
             artifact_name: super-${{ github.event.inputs.version }}-linux-amd64
+          - os: ubuntu-24.04-arm64
+            arch: arm64
+            artifact_name: super-${{ github.event.inputs.version }}-linux-arm64
           - os: macos-latest
+            arch: amd64
             artifact_name: super-${{ github.event.inputs.version }}-darwin-amd64
+          - os: macos-latest
+            arch: arm64
+            artifact_name: super-${{ github.event.inputs.version }}-darwin-arm64
 
     runs-on: ${{ matrix.os }}
 
@@ -77,7 +84,9 @@ jobs:
           name: Release ${{ github.event.inputs.version }}
           files: |
             super-${{ github.event.inputs.version }}-linux-amd64/super-${{ github.event.inputs.version }}-linux-amd64
+            super-${{ github.event.inputs.version }}-linux-arm64/super-${{ github.event.inputs.version }}-linux-arm64
             super-${{ github.event.inputs.version }}-darwin-amd64/super-${{ github.event.inputs.version }}-darwin-amd64
+            super-${{ github.event.inputs.version }}-darwin-arm64/super-${{ github.event.inputs.version }}-darwin-arm64
           generate_release_notes: false
           draft: false
           prerelease: true
