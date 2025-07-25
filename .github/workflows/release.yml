@@ -28,7 +28,7 @@ jobs:
           - os: ubuntu-latest
             arch: amd64
             artifact_name: super-${{ github.event.inputs.version }}-linux-amd64
-          - os: ubuntu-24.04-arm64
+          - os: ubuntu-latest
             arch: arm64
             artifact_name: super-${{ github.event.inputs.version }}-linux-arm64
           - os: macos-latest
