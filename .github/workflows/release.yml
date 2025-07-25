@@ -79,3 +79,9 @@ jobs:
             super-${{ github.event.inputs.version }}-linux-amd64/super-${{ github.event.inputs.version }}-linux-amd64
             super-${{ github.event.inputs.version }}-darwin-amd64/super-${{ github.event.inputs.version }}-darwin-amd64
           generate_release_notes: false
+          draft: false
+          prerelease: true
+          fail_on_unmatched_files: true
+          body: |
+            Binary release for version ${{ github.event.inputs.version }}
+            Built from SHA: ${{ github.event.inputs.sha_ref }}
