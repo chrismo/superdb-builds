@@ -3,12 +3,12 @@ name: Release Build
 on:
   workflow_dispatch:
     inputs:
-      sha_ref:
-        description: 'SHA or ref to build'
-        required: true
-        type: string
       version:
         description: 'Version string for the build/release'
+        required: true
+        type: string
+      sha_ref:
+        description: 'SHA or ref to build'
         required: true
         type: string
       create_release:
@@ -27,46 +27,46 @@ jobs:
             artifact_name: super-${{ github.event.inputs.version }}-linux-amd64
           - os: macos-latest
             artifact_name: super-${{ github.event.inputs.version }}-darwin-amd64
-    
+
     runs-on: ${{ matrix.os }}
-    
+
     steps:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
-      
+
       - name: Install super from specific SHA
         run: |
           go install github.com/brimdata/super@${{ github.event.inputs.sha_ref }}
-      
+
       - name: Verify installation
         run: |
           super --version
           which super
-      
+
       - name: Create artifact directory
         run: mkdir -p artifacts
-      
+
       - name: Copy binary to artifacts
         run: |
           cp $(which super) artifacts/${{ matrix.artifact_name }}
-      
+
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
           path: artifacts/${{ matrix.artifact_name }}
-  
+
   release:
     if: ${{ github.event.inputs.create_release == 'true' }}
     needs: build
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
-      
+
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
