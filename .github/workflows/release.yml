@@ -25,17 +25,17 @@ jobs:
     strategy:
       matrix:
         include:
+          # amd64
           - os: ubuntu-latest
-            arch: amd64
             artifact_name: super-${{ github.event.inputs.version }}-linux-amd64
+
+          # Ubuntu arm64 is a Public Preview on GitHub Actions:
+          # https://github.blog/changelog/2025-01-16-linux-arm64-hosted-runners-now-available-for-free-in-public-repositories-public-preview/
           - os: ubuntu-24.04-arm
-            arch: arm64
             artifact_name: super-${{ github.event.inputs.version }}-linux-arm64
+
+          # For arm64. Something like macos-13 might work for intel? Needs more research.
           - os: macos-latest
-            arch: amd64
-            artifact_name: super-${{ github.event.inputs.version }}-darwin-amd64
-          - os: macos-latest
-            arch: arm64
             artifact_name: super-${{ github.event.inputs.version }}-darwin-arm64
 
     runs-on: ${{ matrix.os }}
