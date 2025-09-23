@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:superdb.org)",
+      "Bash(go install:*)",
+      "Bash(super:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

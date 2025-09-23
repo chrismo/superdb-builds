@@ -23,20 +23,43 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
-          # amd64
+          # Linux builds - static for maximum portability
           - os: ubuntu-latest
             artifact_name: super-${{ github.event.inputs.version }}-linux-amd64
+            goos: linux
+            goarch: amd64
+            build_type: static
 
-          # Ubuntu arm64 is a Public Preview on GitHub Actions:
+          # Linux arm64 is a Public Preview on GitHub Actions:
           # https://github.blog/changelog/2025-01-16-linux-arm64-hosted-runners-now-available-for-free-in-public-repositories-public-preview/
           - os: ubuntu-24.04-arm
             artifact_name: super-${{ github.event.inputs.version }}-linux-arm64
+            goos: linux
+            goarch: arm64
+            build_type: static
 
-          # For arm64. Something like macos-13 might work for intel? Needs more research.
+          # macOS builds - dynamic for proper system integration
           - os: macos-latest
             artifact_name: super-${{ github.event.inputs.version }}-darwin-arm64
+            goos: darwin
+            goarch: arm64
+            build_type: dynamic
+
+          - os: macos-15-intel
+            artifact_name: super-${{ github.event.inputs.version }}-darwin-amd64
+            goos: darwin
+            goarch: amd64
+            build_type: dynamic
+
+          # Windows builds - static for self-contained executables
+          - os: windows-latest
+            artifact_name: super-${{ github.event.inputs.version }}-windows-amd64.exe
+            goos: windows
+            goarch: amd64
+            build_type: static
 
     runs-on: ${{ matrix.os }}
 
@@ -46,7 +69,17 @@ jobs:
         with:
           go-version: '1.24'
 
-      - name: Install super from specific SHA
+      - name: Install super from specific SHA (static build)
+        if: matrix.build_type == 'static'
+        env:
+          CGO_ENABLED: '0'
+        run: |
+          go install -ldflags="-s -w -extldflags '-static'" github.com/brimdata/super/cmd/super@${{ github.event.inputs.sha_ref }}
+
+      - name: Install super from specific SHA (dynamic build)
+        if: matrix.build_type == 'dynamic'
+        env:
+          CGO_ENABLED: '1'
         run: |
           go install github.com/brimdata/super/cmd/super@${{ github.event.inputs.sha_ref }}
 
@@ -86,6 +119,8 @@ jobs:
             super-${{ github.event.inputs.version }}-linux-amd64/super-${{ github.event.inputs.version }}-linux-amd64
             super-${{ github.event.inputs.version }}-linux-arm64/super-${{ github.event.inputs.version }}-linux-arm64
             super-${{ github.event.inputs.version }}-darwin-arm64/super-${{ github.event.inputs.version }}-darwin-arm64
+            super-${{ github.event.inputs.version }}-darwin-amd64/super-${{ github.event.inputs.version }}-darwin-amd64
+            super-${{ github.event.inputs.version }}-windows-amd64.exe/super-${{ github.event.inputs.version }}-windows-amd64.exe
           generate_release_notes: false
           draft: false
           prerelease: true
