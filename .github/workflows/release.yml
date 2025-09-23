@@ -88,12 +88,24 @@ jobs:
           super --version
           which super
 
-      - name: Create artifact directory
+      - name: Create artifact directory (Unix)
+        if: runner.os != 'Windows'
         run: mkdir -p artifacts
 
-      - name: Copy binary to artifacts
+      - name: Create artifact directory (Windows)
+        if: runner.os == 'Windows'
+        run: New-Item -ItemType Directory -Force -Path artifacts
+
+      - name: Copy binary to artifacts (Unix)
+        if: runner.os != 'Windows'
         run: |
           cp $(which super) artifacts/${{ matrix.artifact_name }}
+
+      - name: Copy binary to artifacts (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          $superPath = (Get-Command super).Source
+          Copy-Item $superPath artifacts/${{ matrix.artifact_name }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
