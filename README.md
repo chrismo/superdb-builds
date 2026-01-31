@@ -1,8 +1,16 @@
 # SuperDB Builds
 
-This repo builds the `super` binary from [SuperDB](https://superdb.org/) for
-multiple platforms (Linux amd64/arm64, macOS amd64/arm64, Windows amd64).
+## Deprecated
 
-This repo is used by the [asdf-superdb
-plugin](https://github.com/chrismo/asdf-superdb) to provide download installs of
-`super`.
+This repo is no longer needed. SuperDB now publishes official releases with
+pre-built binaries at:
+
+https://github.com/brimdata/super/releases
+
+The [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) now pulls
+directly from the official releases.
+
+---
+
+*Previously, this repo provided pre-release builds of the `super` binary before
+official releases were available.*
