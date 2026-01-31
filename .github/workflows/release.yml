@@ -135,10 +135,10 @@ jobs:
             super-${{ github.event.inputs.version }}-windows-amd64.exe/super-${{ github.event.inputs.version }}-windows-amd64.exe
           generate_release_notes: false
           draft: false
-          prerelease: true
+          prerelease: false
           fail_on_unmatched_files: true
           body: |
             Binary release for version ${{ github.event.inputs.version }}
             Built from SHA: ${{ github.event.inputs.sha_ref }}
-            
-            This is an unofficial pre-release build of SuperDB that can be installed for testing purposes. It is not intended for production use. See also the [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) which can install these pre-releases.
+
+            See also the [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb).
