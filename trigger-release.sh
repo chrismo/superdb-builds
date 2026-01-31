@@ -8,7 +8,7 @@ if [ $# -lt 2 ]; then
     echo "  version: Version string for the build/release (required)"
     echo "  sha_ref: SHA or ref to build (required)"
     echo ""
-    echo "Example: $0 '0.50327' '733dc02'"
+    echo "Example: $0 '0.1.0' 'v0.1.0'"
     exit 1
 fi
 
