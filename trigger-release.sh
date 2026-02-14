@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+echo "DEPRECATED: This repo is no longer needed. SuperDB now publishes official releases."
+echo "See: https://github.com/brimdata/super/releases"
+exit 0
+
 # Check if required arguments are provided
 if [ $# -lt 2 ]; then
     echo "Usage: $0 <version> <sha_ref>"

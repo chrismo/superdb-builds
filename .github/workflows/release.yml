@@ -1,24 +1,16 @@
-name: Release Build
+name: Release Build (DEPRECATED)
+
+# DEPRECATED: This repo is no longer needed. SuperDB now publishes official releases.
+# See: https://github.com/brimdata/super/releases
+# Triggers removed to prevent accidental builds.
 
 permissions:
   contents: write
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version string for the build/release'
-        required: true
-        type: string
-      sha_ref:
-        description: 'SHA or ref to build'
-        required: true
-        type: string
-      create_release:
-        description: 'Create GitHub release'
-        required: false
-        default: false
-        type: boolean
+  push:
+    branches-ignore:
+      - '**'
 
 jobs:
   build:

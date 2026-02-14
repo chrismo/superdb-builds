@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+echo "DEPRECATED: This repo is no longer needed. SuperDB now publishes official releases."
+echo "See: https://github.com/brimdata/super/releases"
+exit 0
+
 # Parse command line arguments
 UPDATE_MODE=false
 while [[ $# -gt 0 ]]; do
