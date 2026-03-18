@@ -1,16 +1,21 @@
-name: Release Build (DEPRECATED)
+name: Release Build
 
-# DEPRECATED: This repo is no longer needed. SuperDB now publishes official releases.
-# See: https://github.com/brimdata/super/releases
-# Triggers removed to prevent accidental builds.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version string for the release (e.g. 0.1.0)'
+        required: true
+      sha_ref:
+        description: 'SHA or ref to build from chrismo/super fork'
+        required: true
+      create_release:
+        description: 'Create a GitHub release'
+        required: false
+        default: 'true'
 
 permissions:
   contents: write
-
-on:
-  push:
-    branches-ignore:
-      - '**'
 
 jobs:
   build:
@@ -18,22 +23,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Linux builds - static for maximum portability
           - os: ubuntu-latest
             artifact_name: super-${{ github.event.inputs.version }}-linux-amd64
             goos: linux
             goarch: amd64
             build_type: static
 
-          # Linux arm64 is a Public Preview on GitHub Actions:
-          # https://github.blog/changelog/2025-01-16-linux-arm64-hosted-runners-now-available-for-free-in-public-repositories-public-preview/
           - os: ubuntu-24.04-arm
             artifact_name: super-${{ github.event.inputs.version }}-linux-arm64
             goos: linux
             goarch: arm64
             build_type: static
 
-          # macOS builds - dynamic for proper system integration
           - os: macos-latest
             artifact_name: super-${{ github.event.inputs.version }}-darwin-arm64
             goos: darwin
@@ -46,13 +47,6 @@ jobs:
             goarch: amd64
             build_type: dynamic
 
-          # Windows builds - static for self-contained executables
-          - os: windows-latest
-            artifact_name: super-${{ github.event.inputs.version }}-windows-amd64.exe
-            goos: windows
-            goarch: amd64
-            build_type: static
-
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -61,43 +55,39 @@ jobs:
         with:
           go-version: '1.24'
 
-      - name: Install super from specific SHA (static build)
+      - name: Checkout super fork
+        uses: actions/checkout@v4
+        with:
+          repository: chrismo/super
+          ref: ${{ github.event.inputs.sha_ref }}
+
+      - name: Build super (static)
         if: matrix.build_type == 'static'
         env:
           CGO_ENABLED: '0'
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
         run: |
-          go install -ldflags="-s -w -extldflags '-static'" github.com/brimdata/super/cmd/super@${{ github.event.inputs.sha_ref }}
+          go build -ldflags="-s -w" -o super ./cmd/super
 
-      - name: Install super from specific SHA (dynamic build)
+      - name: Build super (dynamic)
         if: matrix.build_type == 'dynamic'
         env:
           CGO_ENABLED: '1'
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
         run: |
-          go install github.com/brimdata/super/cmd/super@${{ github.event.inputs.sha_ref }}
+          go build -o super ./cmd/super
 
-      - name: Verify installation
+      - name: Verify build
+        run: ./super --version
+
+      - name: Copy binary to artifacts
+        env:
+          ARTIFACT_NAME: ${{ matrix.artifact_name }}
         run: |
-          super --version
-          which super
-
-      - name: Create artifact directory (Unix)
-        if: runner.os != 'Windows'
-        run: mkdir -p artifacts
-
-      - name: Create artifact directory (Windows)
-        if: runner.os == 'Windows'
-        run: New-Item -ItemType Directory -Force -Path artifacts
-
-      - name: Copy binary to artifacts (Unix)
-        if: runner.os != 'Windows'
-        run: |
-          cp $(which super) artifacts/${{ matrix.artifact_name }}
-
-      - name: Copy binary to artifacts (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          $superPath = (Get-Command super).Source
-          Copy-Item $superPath artifacts/${{ matrix.artifact_name }}
+          mkdir -p artifacts
+          cp super "artifacts/${ARTIFACT_NAME}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -124,13 +114,13 @@ jobs:
             super-${{ github.event.inputs.version }}-linux-arm64/super-${{ github.event.inputs.version }}-linux-arm64
             super-${{ github.event.inputs.version }}-darwin-arm64/super-${{ github.event.inputs.version }}-darwin-arm64
             super-${{ github.event.inputs.version }}-darwin-amd64/super-${{ github.event.inputs.version }}-darwin-amd64
-            super-${{ github.event.inputs.version }}-windows-amd64.exe/super-${{ github.event.inputs.version }}-windows-amd64.exe
           generate_release_notes: false
           draft: false
           prerelease: false
           fail_on_unmatched_files: true
           body: |
             Binary release for version ${{ github.event.inputs.version }}
-            Built from SHA: ${{ github.event.inputs.sha_ref }}
+            Built from chrismo/super fork at ${{ github.event.inputs.sha_ref }}
+            License: BSD-3-Clause
 
             See also the [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb).

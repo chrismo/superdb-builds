@@ -1,16 +1,11 @@
 # SuperDB Builds
 
-## Deprecated
+Independent builds of the `super` binary from the
+[BSD-3-Clause licensed source](https://github.com/chrismo/super).
 
-This repo is no longer needed. SuperDB now publishes official releases with
-pre-built binaries at:
+Brimdata changed the upstream license from BSD-3-Clause to a restrictive
+source-available license. This repo builds from a fork pinned to the last
+open-source commit.
 
-https://github.com/brimdata/super/releases
-
-The [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) now pulls
-directly from the official releases.
-
----
-
-*Previously, this repo provided pre-release builds of the `super` binary before
-official releases were available.*
+The [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) installs
+binaries from the releases here.
