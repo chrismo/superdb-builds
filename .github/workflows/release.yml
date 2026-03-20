@@ -67,8 +67,9 @@ jobs:
           CGO_ENABLED: '0'
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
+          VERSION: ${{ github.event.inputs.version }}
         run: |
-          go build -ldflags="-s -w" -o super ./cmd/super
+          go build -ldflags="-s -w -X github.com/brimdata/super/cli.version=v${VERSION}" -o super ./cmd/super
 
       - name: Build super (dynamic)
         if: matrix.build_type == 'dynamic'
@@ -76,8 +77,9 @@ jobs:
           CGO_ENABLED: '1'
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
+          VERSION: ${{ github.event.inputs.version }}
         run: |
-          go build -o super ./cmd/super
+          go build -ldflags="-X github.com/brimdata/super/cli.version=v${VERSION}" -o super ./cmd/super
 
       - name: Verify build
         run: ./super --version
