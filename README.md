@@ -10,5 +10,8 @@ a custom source-available license that restricts providing the software as a
 database service. This repo builds from a fork pinned to the last open-source
 commit.
 
-The [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) installs
-binaries from the releases here.
+**Note:** Starting with v0.3.0, official binaries are available directly from
+[brimdata/super releases](https://github.com/brimdata/super/releases). The
+[asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) now downloads
+official release binaries for v0.3.0+ and uses this repo's builds for earlier
+versions.
