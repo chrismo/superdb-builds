@@ -14,3 +14,14 @@ commit.
 [brimdata/super releases](https://github.com/brimdata/super/releases). The
 [asdf-superdb plugin](https://github.com/chrismo/asdf-superdb) now downloads
 official release binaries and uses this repo's builds for pre-release versions.
+
+## License
+
+The build scripts in this repo are licensed under the
+[BSD-3-Clause License](https://opensource.org/licenses/BSD-3-Clause).
+
+This repo builds and distributes binaries from a
+[fork](https://github.com/chrismo/super) of
+[SuperDB](https://github.com/brimdata/super), pinned to the last BSD-3-Clause
+licensed commit. The upstream project is now licensed under the
+[SuperDB Source Available License](https://github.com/brimdata/super/blob/main/LICENSE.md).
